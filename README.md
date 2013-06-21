@@ -20,6 +20,8 @@ Then run the file with the directory path as first argument.
 For example:
 
     ./neocities-uploader.php ./mysite/
+
+If you run the script without any directory as argument, it assumes you want to upload everything from the current directory.	
 	
 ## Requirements
 1. php
