@@ -17,7 +17,7 @@ $uploader->init();
 
 class NeoCities_Uploader {
     
-    private $root_url = 'http://neocities.org';
+    private $root_url = 'https://neocities.org';
     private $username = '';
     private $password = '';
     private $upload_dir = '';
