@@ -23,6 +23,22 @@ class NeoCities_Uploader {
     private $upload_dir = '';
     private $files_list = array();
     
+    // allowed extensions copied from:
+    // https://raw.github.com/kyledrake/neocities-web/master/models/site.rb
+    private $allowed_extensions = array(
+        'html', 'htm', 'txt', 'text', 
+        'css', 
+        'js', 
+        'jpg', 'jpeg', 'png', 'gif', 'svg', 
+        'md', 'markdown', 'eot', 'ttf', 'woff', 
+        'json', 'geojson', 
+        'csv', 'tsv', 'mf', 
+        'ico', 
+        'pdf', 
+        'asc', 'key', 'pgp', 
+        'xml',
+    );
+    
     private $curl_default_options = array(
             CURLOPT_SSL_VERIFYPEER => 0,
             CURLOPT_SSL_VERIFYHOST => 0,
@@ -58,11 +74,14 @@ class NeoCities_Uploader {
     }
     
     private function recursive_dir() {
-        foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->upload_dir, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST) as $path) {
+        foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->upload_dir, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST) as $path) {
             if ($path->isFile()) {
-                $this->files_list[] =  $path->getPathname();
+                $path_name = $path->getPathname();
+                if (!preg_match('/\/\./', $path_name) && preg_match('/' . implode('$|', $this->allowed_extensions). '$/i', $path_name)) {
+                    $this->files_list[] =  $path->getPathname();
+                }
             }
-        }    
+        }
     }
     
     private function login() {
