@@ -16,45 +16,45 @@ $uploader = new NeoCities_Uploader($username, $password, $upload_dir);
 $uploader->init();
 
 class NeoCities_Uploader {
-    
+
     private $root_url = 'https://neocities.org';
     private $username = '';
     private $password = '';
     private $upload_dir = '';
     private $files_list = array();
-    
+
     // allowed extensions copied from:
     // https://raw.github.com/kyledrake/neocities-web/master/models/site.rb
     private $allowed_extensions = array(
-        'html', 'htm', 'txt', 'text', 
-        'css', 
-        'js', 
-        'jpg', 'jpeg', 'png', 'gif', 'svg', 
-        'md', 'markdown', 'eot', 'ttf', 'woff', 
-        'json', 'geojson', 
-        'csv', 'tsv', 'mf', 
-        'ico', 
-        'pdf', 
-        'asc', 'key', 'pgp', 
+        'html', 'htm', 'txt', 'text',
+        'css',
+        'js',
+        'jpg', 'jpeg', 'png', 'gif', 'svg',
+        'md', 'markdown', 'eot', 'ttf', 'woff',
+        'json', 'geojson',
+        'csv', 'tsv', 'mf',
+        'ico',
+        'pdf',
+        'asc', 'key', 'pgp',
         'xml',
-		'mid', 'midi'
+        'mid', 'midi'
     );
-    
+
     private $curl_default_options = array(
-            CURLOPT_SSL_VERIFYPEER => 0,
-            CURLOPT_SSL_VERIFYHOST => 0,
-            CURLOPT_FOLLOWLOCATION => 1,
-            CURLOPT_AUTOREFERER => 1,
-            CURLOPT_MAXREDIRS => 50,
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_CONNECTTIMEOUT => 30,
-            CURLOPT_TIMEOUT => 35,
-            CURLOPT_HTTPHEADER => array(
-                    'Connection: close',
-                    'User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:20.0) Gecko/20100101 Firefox/20.0'
-            ),
+        CURLOPT_SSL_VERIFYPEER => 0,
+        CURLOPT_SSL_VERIFYHOST => 0,
+        CURLOPT_FOLLOWLOCATION => 1,
+        CURLOPT_AUTOREFERER => 1,
+        CURLOPT_MAXREDIRS => 50,
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_CONNECTTIMEOUT => 30,
+        CURLOPT_TIMEOUT => 35,
+        CURLOPT_HTTPHEADER => array(
+            'Connection: close',
+            'User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:20.0) Gecko/20100101 Firefox/20.0'
+        ),
     );
-    
+
     public function __construct($username, $password, $upload_dir='') {
         $this->username = $username;
         $this->password = $password;
@@ -73,7 +73,7 @@ class NeoCities_Uploader {
         }
         echo("\nFinished Uploading\n");
     }
-    
+
     private function recursive_dir() {
         foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->upload_dir, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST) as $path) {
             if ($path->isFile()) {
@@ -84,7 +84,7 @@ class NeoCities_Uploader {
             }
         }
     }
-    
+
     private function login() {
         echo("\nLogging in ...");
         $curl = curl_init();
@@ -92,16 +92,16 @@ class NeoCities_Uploader {
         $options[CURLOPT_URL] = $this->root_url . '/signin';
         $options[CURLOPT_POST] = 1;
         $options[CURLOPT_POSTFIELDS] = http_build_query(array(
-                'username' => $this->username,
-                'password' => $this->password,
-                'csrf_token' => $this->get_csrf_token($this->root_url . '/signin')
+            'username' => $this->username,
+            'password' => $this->password,
+            'csrf_token' => $this->get_csrf_token($this->root_url . '/signin')
         ));
         curl_setopt_array($curl, $options);
         $content = curl_exec($curl);
         curl_close($curl);
         echo("Done.\n");
     }
-    
+
     private function upload($file) {
         echo("\nUploading $file ...");
         $curl = curl_init();
@@ -109,17 +109,17 @@ class NeoCities_Uploader {
         $options[CURLOPT_URL] = $this->root_url . '/site_files/upload';
         $options[CURLOPT_POST] = 1;
         $options[CURLOPT_POSTFIELDS] = array(
-                'files[]' => '@' . $file,
-                'csrf_token' => $this->get_csrf_token($this->root_url . '/site_files/new'),
-				'from_button' => 'true',
-				'dir' => ''
+            'files[]' => '@' . $file,
+            'csrf_token' => $this->get_csrf_token($this->root_url . '/site_files/new'),
+            'from_button' => 'true',
+            'dir' => ''
         );
         curl_setopt_array($curl, $options);
         $content = curl_exec($curl);
         curl_close($curl);
         echo("Done.\n");
     }
-    
+
     private function get_csrf_token($url) {
         $curl = curl_init();
         $options = $this->curl_default_options;
@@ -137,12 +137,11 @@ class NeoCities_Uploader {
                 break;
             }
         }
-        unset($dom);          
+        unset($dom);
         curl_close($curl);
         return $csrf_token;
     }
-    
-    
+
 }
 
 
