@@ -37,6 +37,7 @@ class NeoCities_Uploader {
         'pdf', 
         'asc', 'key', 'pgp', 
         'xml',
+		'mid', 'midi'
     );
     
     private $curl_default_options = array(
@@ -108,8 +109,10 @@ class NeoCities_Uploader {
         $options[CURLOPT_URL] = $this->root_url . '/site_files/upload';
         $options[CURLOPT_POST] = 1;
         $options[CURLOPT_POSTFIELDS] = array(
-                'newfile' => '@' . $file,
-                'csrf_token' => $this->get_csrf_token($this->root_url . '/site_files/new')
+                'files[]' => '@' . $file,
+                'csrf_token' => $this->get_csrf_token($this->root_url . '/site_files/new'),
+				'from_button' => 'true',
+				'dir' => ''
         );
         curl_setopt_array($curl, $options);
         $content = curl_exec($curl);
