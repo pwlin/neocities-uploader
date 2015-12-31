@@ -24,20 +24,21 @@ class NeoCities_Uploader {
     private $files_list = array();
 
     // allowed extensions copied from:
-    // https://raw.github.com/kyledrake/neocities-web/master/models/site.rb
+    // https://github.com/neocities/neocities/blob/master/models/site.rb
     private $allowed_extensions = array(
         'html', 'htm', 'txt', 'text',
-        'css',
+        'css', 'less', 'sass',
         'js',
         'jpg', 'jpeg', 'png', 'gif', 'svg',
-        'md', 'markdown', 'eot', 'ttf', 'woff',
+        'md', 'markdown', 'eot', 'ttf', 'woff', 'woff2', 'otf'
         'json', 'geojson',
         'csv', 'tsv', 'mf',
         'ico',
         'pdf',
         'asc', 'key', 'pgp',
         'xml',
-        'mid', 'midi'
+        'mid', 'midi',
+        'manifest', 'webapp'
     );
 
     private $curl_default_options = array(
@@ -51,7 +52,7 @@ class NeoCities_Uploader {
         CURLOPT_TIMEOUT => 35,
         CURLOPT_HTTPHEADER => array(
             'Connection: close',
-            'User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:20.0) Gecko/20100101 Firefox/20.0'
+            'User-Agent: Mozilla/5.0 (Windows NT 6; rv:45.0) Gecko/20100101 Firefox/45.0'
         ),
     );
 
