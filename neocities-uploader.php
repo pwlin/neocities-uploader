@@ -75,7 +75,7 @@ class NeoCities_Uploader {
 			echo ("\nUpload directory set to: {$this->upload_dir}\n");
 			$this->recursive_dir();
 		} elseif (is_file($this->upload_dir)) {
-			$this->files_list = [realpath($this->upload_dir) ];
+			$this->files_list = [realpath($this->upload_dir)];
 			echo ("\nSingle file upload: {$this->files_list[0]}\n");
 		} else {
 			echo ("\nInvalid Directory. Exiting...\n");
